@@ -12,7 +12,7 @@ All visualisations are schema-agnostic: they read from the loaded schema and ins
 
 ## Using the tool
 
-The application runs entirerly in-browser. It is hosted online using GitHub Pages and can be accessed at: [https://greyjolly.github.io/InstaVizer](https://greyjolly.github.io/InstaVizer).
+The application runs entirerly in-browser. It is hosted online using GitHub Pages and can be accessed at: [https://greyjolly.github.io/InstaVizer/](https://greyjolly.github.io/InstaVizer/).
 
 It can be self-hosted using the code provided in the repository.
 
