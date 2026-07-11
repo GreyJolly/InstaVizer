@@ -1,0 +1,283 @@
+/* ===========================
+ *   Scatterplot (modal chart type)
+ *   =========================== */
+
+/* Scatter controls bar (in modal header area) */
+.scatter-controls {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 24px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+.scatter-mode-toggle {
+    display: flex;
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.scatter-mode-label {
+    font-size: 0.84rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 4px 0;
+}
+
+.scatter-reconfigure-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    margin-left: 8px;
+}
+
+.scatter-reconfigure-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+.scatter-mode-btn {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.scatter-mode-btn:hover {
+    color: var(--text-secondary);
+}
+
+.scatter-mode-btn.active {
+    background: var(--accent-blue);
+    color: white;
+    box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
+}
+
+.scatter-er-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.scatter-er-options label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.scatter-er-options select {
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.scatter-er-options select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+/* Empty state for scatterplot */
+.scatter-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+}
+
+/* Scale toggle */
+.scatter-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.scatter-toggle-label:hover {
+    background: var(--bg-card);
+}
+
+.scatter-toggle-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 32px;
+    height: 18px;
+    background: var(--bg-card);
+    border-radius: 9px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.scatter-toggle-label input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.scatter-toggle-label input[type="checkbox"]:checked {
+    background: var(--accent-blue);
+}
+
+.scatter-toggle-label input[type="checkbox"]:checked::after {
+    left: 16px;
+    background: white;
+}
+
+.scatter-toggle-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+
+/* Tooltip */
+.scatter-tooltip {
+    position: absolute;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    pointer-events: none;
+    z-index: 1100;
+    box-shadow: var(--shadow-md);
+    min-width: 120px;
+}
+
+.scatter-tip-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 4px;
+}
+
+.scatter-tip-row {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+/* Dots */
+.scatter-dot {
+    transition: r 0.15s ease;
+}
+
+/* Labels */
+.scatter-label {
+    pointer-events: none;
+}
+
+/* Sidebar button */
+.scatter-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    margin-top: 8px;
+}
+
+.scatter-btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent-blue);
+    color: var(--text-primary);
+}
+
+.scatter-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.scatter-btn:disabled:hover {
+    background: var(--bg-card);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.scatter-btn svg {
+    flex-shrink: 0;
+}
+
+/* Summary stats */
+.stats-summary {
+    display: flex;
+    align-items: center;
+}
+
+.stats-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.summary-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.summary-value {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.summary-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}

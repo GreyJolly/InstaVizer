@@ -1,0 +1,525 @@
+/* Modal - renders in-place, filling the canvas area */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal {
+    background: var(--bg-primary);
+    border: none;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.modal-title-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Chart Type Toggle */
+.chart-type-toggle {
+    display: flex;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    padding: 4px;
+    gap: 4px;
+}
+
+.toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.toggle-btn:hover {
+    color: var(--text-secondary);
+    background: var(--bg-card);
+}
+
+.toggle-btn.active {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.toggle-btn svg {
+    flex-shrink: 0;
+}
+
+/* Modal control panel */
+.modal-control-bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 30px;
+    padding-top: 10px;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.modal-control-bar label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.modal-control-bar select,
+.modal-control-bar input[type="number"] {
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.modal-control-bar select:focus,
+.modal-control-bar input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.parallel-controls .control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.parallel-controls .control-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.parallel-controls .control-group select {
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.parallel-controls .control-group select:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+/* Relation Chain */
+.relation-chain-group {
+    flex: 1;
+    min-width: 300px;
+    position: relative;
+}
+
+.relation-chain-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+.relation-chain-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.relation-chain {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.chain-entity {
+    padding: 6px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.chain-relation {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+}
+
+.chain-arrow {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+.chain-remove-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 0;
+    margin-left: 4px;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.chain-remove-btn:hover {
+    color: white;
+}
+
+.add-relation-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--bg-card);
+    border: 1px dashed var(--border-color);
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.add-relation-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* Add Relation Dropdown */
+.add-relation-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    width: 320px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    z-index: 150; /* Higher than modal content */
+    overflow: hidden;
+    display: none;
+}
+
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.dropdown-header strong {
+    color: var(--accent-cyan);
+}
+
+.dropdown-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.dropdown-close:hover {
+    color: var(--text-primary);
+}
+
+.available-relations {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.relation-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.relation-option:hover {
+    background: var(--bg-card);
+}
+
+.relation-option-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.relation-option-target {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.relation-option-arrow {
+    color: var(--accent-cyan);
+    margin: 0 4px;
+}
+
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.modal-minimize {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+}
+
+.modal-minimize:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.modal-content {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.modal-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+    background: 
+        radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+        linear-gradient(var(--bg-primary) 1px, transparent 1px),
+        linear-gradient(90deg, var(--bg-primary) 1px, transparent 1px),
+        var(--bg-primary);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    background-position: center, -1px -1px, -1px -1px;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+/* Minimized modal: hide entire overlay */
+.modal-overlay.minimized {
+    display: none;
+}
+
+/* Hide file sidebar when modal is minimized */
+body.modal-minimized .file-sidebar {
+    display: none;
+}
+
+/* Disable graph node clicks while minimized */
+body.modal-minimized #er-canvas .entity-rect,
+body.modal-minimized #er-canvas .relationship-rect {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Floating chart preview (minimized modal) */
+.chart-preview {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 520px;
+    height: 380px;
+    min-width: 320px;
+    min-height: 250px;
+    max-width: calc(100% - 40px);
+    max-height: calc(100% - 40px);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: var(--shadow-lg);
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chart-preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.chart-preview-header:hover {
+    background: var(--bg-card);
+}
+
+.chart-preview-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chart-preview-expand-icon {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+}
+
+.chart-preview-header:hover .chart-preview-expand-icon {
+    color: var(--accent-blue);
+}
+
+.chart-preview-body {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-primary);
+    min-height: 0;
+}
+
+.chart-preview-body > #chart-container {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Hide x-axis labels only in the floating window */
+.floating-chart .x-axis text,
+.floating-chart .parallel-axis-label {
+    display: none;
+}
+
+/* Hide count-on-top bar labels in the floating window when too small */
+.floating-chart.hide-bar-labels .bar-label,
+.floating-chart.hide-bar-labels .comp-bar-label {
+    display: none;
+}
+
+/* Shrink x-axis margin since labels are gone */
+.floating-chart .x-axis line {
+    stroke-opacity: 0.5;
+}
+
+/* 8-direction resize handles */
+.chart-preview-resize {
+    position: absolute;
+    z-index: 2;
+}
+
+.chart-preview-resize-n  { top: -3px;    left: 8px;    right: 8px;   height: 6px;   cursor: ns-resize; }
+.chart-preview-resize-s  { bottom: -3px; left: 8px;    right: 8px;   height: 6px;   cursor: ns-resize; }
+.chart-preview-resize-e  { top: 8px;     bottom: 8px;  right: -3px;  width: 6px;    cursor: ew-resize; }
+.chart-preview-resize-w  { top: 8px;     bottom: 8px;  left: -3px;   width: 6px;    cursor: ew-resize; }
+.chart-preview-resize-ne { top: -3px;    right: -3px;  width: 12px;  height: 12px;  cursor: nesw-resize; }
+.chart-preview-resize-nw { top: -3px;    left: -3px;   width: 12px;  height: 12px;  cursor: nwse-resize; }
+.chart-preview-resize-se { bottom: -3px; right: -3px;  width: 12px;  height: 12px;  cursor: nwse-resize; }
+.chart-preview-resize-sw { bottom: -3px; left: -3px;   width: 12px;  height: 12px;  cursor: nesw-resize; }

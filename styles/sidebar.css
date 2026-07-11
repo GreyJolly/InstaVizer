@@ -1,0 +1,486 @@
+/* Tools Column (left, main screen only) */
+.tools-column {
+    width: 240px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    z-index: 10;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.tools-column.hidden {
+    display: none;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-header h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    background: var(--accent-cyan);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Drop Zone */
+.drop-zone {
+    border: 2px dashed var(--border-color);
+    border-radius: 16px;
+    padding: 24px 14px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: var(--bg-tertiary);
+}
+
+.drop-zone:hover,
+.drop-zone.drag-over {
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    box-shadow: var(--shadow-glow);
+}
+
+.drop-zone.drag-over .drop-icon {
+    transform: translateY(-4px) scale(1.1);
+    color: var(--accent-blue);
+}
+
+.drop-zone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.drop-icon {
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+.drop-text {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.drop-subtext {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Schema File (in tools column) */
+.file-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.schema-slot {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 48px;
+}
+
+.placeholder {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+.schema-file .file-item {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(34, 211, 238, 0.1));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.schema-file .file-icon {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+}
+
+/* ======================== */
+/* Shared File Sidebar      */
+/* ======================== */
+.file-sidebar {
+    width: 300px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    z-index: 10;
+    position: relative;
+    transition: width 0.25s ease;
+    overflow: hidden;
+}
+
+.file-sidebar-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.file-sidebar-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.file-sidebar-title-row h2 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.file-sidebar-title-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-count {
+    background: var(--accent-blue);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* Collapse button */
+.collapse-btn {
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+/* ======================== */
+/* Collapsed File Sidebar   */
+/* ======================== */
+.file-sidebar.collapsed {
+    width: 44px;
+}
+
+.file-sidebar.collapsed .file-sidebar-header {
+    padding: 12px 10px;
+}
+
+.file-sidebar.collapsed .file-sidebar-title-row h2,
+.file-sidebar.collapsed .file-sidebar-controls,
+.file-sidebar.collapsed .file-count {
+    display: none;
+}
+
+.file-sidebar.collapsed .file-sidebar-title-row {
+    justify-content: center;
+}
+
+.file-sidebar.collapsed .file-sidebar-title-actions {
+    gap: 0;
+}
+
+.file-sidebar.collapsed .collapse-btn svg {
+    transform: rotate(180deg);
+}
+
+.file-sidebar.collapsed .file-sidebar-list,
+.file-sidebar.collapsed .file-sidebar-footer {
+    display: none !important;
+}
+
+.file-sidebar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.select-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.select-btn {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.select-btn:hover {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    color: white;
+}
+
+/* Edit mode toggle */
+.edit-toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.edit-toggle-label:hover {
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+}
+
+.edit-toggle-label.active {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-blue);
+}
+
+.edit-toggle-label input {
+    display: none;
+}
+
+/* File sidebar list */
+.file-sidebar-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* File sidebar footer (clear button, visible in edit mode) */
+.file-sidebar-footer {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ======================== */
+/* Unified File Item        */
+/* ======================== */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.file-item:hover {
+    background: var(--bg-card);
+}
+
+.file-item.selected {
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.file-item.disabled {
+    opacity: 0.4;
+}
+
+.file-item.disabled .file-icon {
+    filter: grayscale(1);
+}
+
+.file-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.file-icon:hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+}
+
+.file-color-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.file-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.file-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.file-name {
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-meta {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+.file-toggle {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.file-item.selected .file-toggle {
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.file-item:not(.selected) .file-toggle {
+    background: transparent;
+    border-color: var(--border-color);
+}
+
+.file-toggle svg {
+    width: 12px;
+    height: 12px;
+    color: white;
+}
+
+.file-item:not(.selected) .file-toggle svg {
+    display: none;
+}
+
+/* File Remove Button */
+.file-remove {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.file-remove:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.15);
+}
+
+.file-remove svg {
+    width: 10px;
+    height: 10px;
+}
+
+/* Show remove buttons when edit mode is active */
+.file-sidebar.edit-mode .file-remove {
+    display: flex;
+}
+
+/* Buttons */
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.generate-btn {
+    background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.generate-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.generate-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.clear-btn {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    width: 100%;
+}
+
+.clear-btn:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}

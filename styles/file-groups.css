@@ -1,0 +1,281 @@
+/* ===========================
+   File Groups
+   =========================== */
+
+/* Group container */
+.file-group {
+    margin-bottom: 4px;
+}
+
+/* Group header row */
+.file-group-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    user-select: none;
+}
+
+.file-group-header:hover {
+    background: var(--bg-tertiary);
+}
+
+.file-group-header.drag-over {
+    background: rgba(59, 130, 246, 0.15);
+    outline: 2px dashed var(--accent-blue);
+    outline-offset: -2px;
+}
+
+.file-group-color {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.file-group-color:hover {
+    opacity: 0.8;
+}
+
+.file-group-color .file-color-input {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.file-group-chevron {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+}
+
+.file-group-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-group-count {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    padding: 1px 6px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+/* Group action buttons (rename, select, delete) */
+.file-group-actions {
+    display: flex;
+    gap: 2px;
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.file-group-header:hover .file-group-actions {
+    opacity: 1;
+}
+
+.file-group-action-btn {
+    width: 22px;
+    height: 22px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+
+.file-group-action-btn:hover {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.file-group-action-btn--danger:hover {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.12);
+}
+
+/* Grouped file items - indented */
+.file-item--grouped {
+    margin-left: 14px;
+    border-left: 2px solid var(--border-color);
+    border-radius: 0 10px 10px 0;
+}
+
+/* Dragging state */
+.file-item.dragging {
+    opacity: 0.4;
+}
+
+/* ===========================
+   Create Group Button
+   =========================== */
+.file-sidebar-group-actions {
+    padding: 8px 16px 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.create-group-btn {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: inherit;
+}
+
+.create-group-btn:hover {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+/* Hide create-group when sidebar is collapsed */
+.file-sidebar.collapsed .file-sidebar-group-actions {
+    display: none;
+}
+
+/* ===========================
+   Selection Mode
+   =========================== */
+
+/* Selection bar at top of viewport */
+.group-selection-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: var(--bg-card);
+    border-bottom: 2px solid var(--accent-blue);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-lg);
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+.group-selection-bar-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.group-selection-bar-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.group-selection-count {
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+.group-selection-bar-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.group-sel-confirm {
+    background: var(--accent-blue) !important;
+    color: white !important;
+    border-color: var(--accent-blue) !important;
+}
+
+.group-sel-confirm:hover {
+    background: #2563eb !important;
+}
+
+.group-sel-cancel:hover {
+    background: var(--bg-tertiary) !important;
+}
+
+/* In selection mode, change cursor globally */
+body.group-selection-mode .scatter-dot {
+    cursor: crosshair !important;
+    user-select: none;
+}
+
+body.group-selection-mode .bar-hover,
+body.group-selection-mode .bar {
+    cursor: crosshair !important;
+    user-select: none;
+}
+
+body.group-selection-mode .file-item {
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Lasso rectangle */
+.lasso-rect {
+    pointer-events: none;
+}
+
+/* Inline group-name editor (replaces the browser prompt for rename) */
+.file-group-name-input {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--accent-blue, #3b82f6);
+    border-radius: 4px;
+    padding: 1px 6px;
+    outline: none;
+    font-family: inherit;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* Disabled action button (e.g. "select files to add" when the active chart
+   has no per-file selectable marks). Still clickable so it can explain via a
+   toast, but visually muted and non-interactive-looking. */
+.file-group-action-btn--disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.file-group-action-btn--disabled:hover {
+    background: transparent;
+    color: var(--text-muted);
+}

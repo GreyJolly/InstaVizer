@@ -1,0 +1,431 @@
+/* ===========================
+ * MDS Configuration Dialog
+ * =========================== */
+
+.mds-config-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: mds-fade-in 0.15s ease;
+}
+
+@keyframes mds-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.mds-config-dialog {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    width: 520px;
+    max-width: 92vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+    animation: mds-slide-up 0.2s ease;
+}
+
+@keyframes mds-slide-up {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Header */
+.mds-config-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.mds-config-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.mds-config-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s, background 0.15s;
+}
+
+.mds-config-close:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+}
+
+/* Body (scrollable) */
+.mds-config-body {
+    overflow-y: auto;
+    padding: 16px 20px;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Sections */
+.mds-cfg-section {
+    margin-bottom: 18px;
+}
+
+.mds-cfg-section-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+}
+
+/* Metric toggle */
+.mds-cfg-metric-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mds-cfg-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.mds-cfg-radio-label:hover {
+    background: var(--bg-tertiary);
+}
+
+.mds-cfg-radio-label:has(input:checked) {
+    border-color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.06);
+}
+
+.mds-cfg-radio-label input[type="radio"] {
+    accent-color: var(--accent-blue);
+}
+
+/* Collapsible groups (attributes / filters) */
+.mds-cfg-collapsible {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 6px;
+    overflow: hidden;
+}
+
+.mds-cfg-collapsible-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg-tertiary);
+    transition: background 0.15s;
+}
+
+.mds-cfg-collapsible-header:hover {
+    background: var(--bg-card);
+}
+
+.mds-cfg-chevron {
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    color: var(--text-muted);
+}
+
+.mds-cfg-collapsible.collapsed .mds-cfg-chevron {
+    transform: rotate(-90deg);
+}
+
+.mds-cfg-collapsible-label {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.mds-cfg-attr-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.mds-cfg-collapsible-body {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.mds-cfg-collapsible.collapsed .mds-cfg-collapsible-body {
+    display: none;
+}
+
+/* Select All / None row */
+.mds-cfg-select-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.mds-cfg-link-btn {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-family: inherit;
+    text-decoration: underline;
+}
+
+.mds-cfg-link-btn:hover {
+    color: var(--accent-cyan);
+}
+
+/* Attribute checkboxes */
+.mds-cfg-attr-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 0;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+}
+
+.mds-cfg-attr-check input[type="checkbox"] {
+    accent-color: var(--accent-blue);
+}
+
+.mds-cfg-dtype-tag {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: auto;
+}
+
+/* Structural options */
+.mds-cfg-structural-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mds-cfg-toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.mds-cfg-toggle-row input[type="checkbox"] {
+    accent-color: var(--accent-blue);
+}
+
+.mds-cfg-approx-params {
+    padding: 10px 14px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mds-cfg-param-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.mds-cfg-param-row label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.mds-cfg-param-row input[type="number"] {
+    width: 80px;
+    padding: 5px 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.82rem;
+    font-family: inherit;
+}
+
+.mds-cfg-param-row input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.mds-cfg-hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin: 2px 0 0;
+    line-height: 1.4;
+}
+
+/* Filter section - instance filters */
+.mds-cfg-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.mds-cfg-filter-attr {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-subtle, var(--border-color));
+}
+
+.mds-cfg-filter-attr:last-child {
+    border-bottom: none;
+}
+
+.mds-cfg-filter-attr-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.mds-cfg-enum-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 10px;
+    padding: 2px 0 2px 4px;
+}
+
+.mds-cfg-enum-check {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-primary);
+}
+
+.mds-cfg-enum-check input[type="checkbox"] {
+    accent-color: var(--accent-blue);
+}
+
+.mds-cfg-numeric-inputs {
+    padding: 2px 0 2px 4px;
+}
+
+.mds-cfg-range-info {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.mds-cfg-num-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+
+.mds-cfg-num-row label {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    width: 50px;
+}
+
+.mds-cfg-num-row input[type="number"] {
+    width: 100px;
+    padding: 4px 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-family: inherit;
+}
+
+.mds-cfg-num-row input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+/* Empty state */
+.mds-cfg-empty {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 12px;
+    text-align: center;
+}
+
+/* Footer */
+.mds-config-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.mds-cfg-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.mds-cfg-btn-cancel {
+    background: var(--bg-card);
+    color: var(--text-secondary);
+}
+
+.mds-cfg-btn-cancel:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.mds-cfg-btn-run {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+}
+
+.mds-cfg-btn-run:hover {
+    filter: brightness(1.1);
+}

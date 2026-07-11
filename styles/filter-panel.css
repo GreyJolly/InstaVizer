@@ -1,0 +1,487 @@
+/* ===========================
+   Filter Panel - Collapsible filter UI at bottom of chart area
+   =========================== */
+
+.filter-panel {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.filter-panel.collapsed .filter-panel-body,
+.filter-panel.collapsed .filter-resize-handle {
+    display: none;
+}
+
+.filter-panel.collapsed .filter-collapse-btn svg {
+    transform: rotate(180deg);
+}
+
+/* ---- Header ---- */
+.filter-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.filter-panel-header:hover {
+    background: var(--bg-card);
+}
+
+.filter-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.filter-panel-title svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.filter-active-count {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: var(--accent-blue);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.filter-panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-clear-btn {
+    padding: 3px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s ease;
+}
+
+.filter-clear-btn:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.08);
+}
+
+.filter-collapse-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-collapse-btn svg {
+    transition: transform 0.25s ease;
+}
+
+/* ---- View toggle button ---- */
+.filter-view-toggle {
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 3px 6px;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s ease;
+}
+
+.filter-view-toggle:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+/* Show list icon in chart mode, chart icon in list mode */
+.view-chart .filter-icon-chart { display: none; }
+.view-chart .filter-icon-list  { display: block; }
+.view-list  .filter-icon-list  { display: none; }
+.view-list  .filter-icon-chart { display: block; }
+
+/* ---- Resize handle ---- */
+.filter-resize-handle {
+    height: 8px;
+    cursor: ns-resize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.filter-resize-handle:hover {
+    background: var(--bg-card);
+}
+
+.filter-resize-grip {
+    width: 40px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--border-color);
+}
+
+.filter-resize-handle:hover .filter-resize-grip {
+    background: var(--text-muted);
+}
+
+/* ---- Body ---- */
+.filter-panel-body {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px 24px 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: stretch;
+    align-content: flex-start;
+}
+
+.filter-panel-body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.filter-panel-body::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+/* ---- Each attribute section ---- */
+.filter-attr-section {
+    flex: 1 1 200px;
+    min-width: 180px;
+    max-height: 100%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.filter-attr-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-attr-type {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: var(--bg-tertiary);
+    border-radius: 4px;
+    padding: 1px 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+}
+
+/* ==================================
+   LIST MODE: Enum filter (scrollable, aligned columns)
+   ================================== */
+.filter-enum-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-enum-checks {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+    max-height: 140px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
+}
+
+/* Two columns when wide enough */
+@container (min-width: 280px) {
+    .filter-enum-checks {
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 12px;
+    }
+}
+
+/* Fallback for browsers without container queries */
+@media (min-width: 600px) {
+    .filter-attr-section:not(:only-child) .filter-enum-checks {
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 12px;
+    }
+}
+
+.filter-enum-checks::-webkit-scrollbar {
+    width: 4px;
+}
+
+.filter-enum-checks::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 2px;
+}
+
+.filter-enum-check {
+    display: grid;
+    grid-template-columns: 16px 1fr auto;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 2px 0;
+}
+
+.filter-enum-check input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--accent-blue);
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.filter-enum-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.filter-enum-count {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+    text-align: right;
+}
+
+.filter-enum-count.positive {
+    color: #34d399;
+}
+
+.filter-enum-count.negative {
+    color: #f87171;
+}
+
+/* ==================================
+   LIST MODE: Numeric filter
+   ================================== */
+.filter-numeric-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-numeric-range {
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-range-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+.filter-numeric-inputs {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.filter-input-group label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.filter-input-group input[type="number"] {
+    width: 100%;
+    padding: 5px 7px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.78rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.filter-input-group input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.filter-input-group input[type="number"]::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+/* ==================================
+   CHART MODE: Mini stacked bar chart
+   ================================== */
+.filter-chart-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+    flex: 1;
+}
+
+.filter-chart-bin-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+}
+
+.filter-chart-bin-ctrl label {
+    font-weight: 500;
+}
+
+.filter-bin-input {
+    width: 60px;
+    padding: 2px 6px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 0.7rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.filter-bin-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+.filter-bin-input::placeholder {
+    color: var(--text-muted);
+    opacity: 0.6;
+}
+
+.filter-mini-chart {
+    flex: 1;
+    min-height: 60px;
+    position: relative;
+}
+
+.filter-mini-chart svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.filter-chart-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    min-height: 40px;
+}
+
+/* Chart mode: make sections taller to show charts */
+.view-chart .filter-attr-section {
+    min-height: 110px;
+    height: 100%;
+    flex: 1 1 240px;
+}
+
+/* Hover on bars */
+.filter-bar-group:hover {
+    filter: brightness(1.15);
+}
+
+/* ==================================
+   Tooltip
+   ================================== */
+.filter-bin-tooltip {
+    position: fixed;
+    z-index: 10000;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    display: none;
+    max-width: 240px;
+}
+
+.fbt-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 3px;
+}
+
+.fbt-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 0;
+}
+
+.fbt-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+.fbt-total {
+    margin-top: 3px;
+    padding-top: 3px;
+    border-top: 1px solid var(--border-color);
+    font-weight: 600;
+    color: var(--text-muted);
+}
