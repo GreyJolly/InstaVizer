@@ -15,7 +15,7 @@ Two kinds of file are needed: one schema file and any number of instance files.
 The schema file is a JSON object with `entities` and `relations`. Each entity lists `properties`; each property has a `name` and a `dtype`. Supported dtypes are `enum` (which carries a `values` list), `int`, `float`, `bool`, and `string`. The `relations` object maps, for every entity, each outgoing relation to its target entities, with an optional `properties` array.
 
 > [!NOTE]
-> `bool` and `string` attributes are supported but not visualised in the charts. `bool` attributes are still factored into the attribute distance computation. Properties defined on relations are supported but not visualised.
+> `string` attributes are supported but not visualised in the charts. Properties defined on relations are supported but not visualised.
 
 ```json
 {
@@ -163,6 +163,8 @@ Shows how the values of a single attribute are distributed, stacked by file to s
 ![Enum Attribute distribution](images/enum-attribute-distribution.png)
 
 
+- Bool attributes are shown the same way as enums, with one stacked bar for `true` and one for `false`. The two bars always appear in that order, so they line up when switching between bool attributes.
+
 - Numeric attributes (int/float) are shown as a stacked histogram over automatically computed bins.
 
 ![Integer Attribute distribution](images/attribute-distribution.png)
@@ -298,7 +300,7 @@ Grouping is the main way to turn files into meaningful visual categories that pe
 
 ### Filtering instances
 
-Per-node charts include a collapsible **Filters** panel at the bottom that narrows which instances are counted, allowing to analyse a vertical slice of the data. Filters are defined per attribute: **enum** attributes can be filtered to include or exclude specific values; **numeric** attributes can be filtered using floor and ceiling ranges.
+Per-node charts include a collapsible **Filters** panel at the bottom that narrows which instances are counted, allowing to analyse a vertical slice of the data. Filters are defined per attribute: **enum** and **bool** attributes can be filtered to include or exclude specific values; **numeric** attributes can be filtered using floor and ceiling ranges.
 
 The panel offers a **list view** and a **chart view**.
 In the chart view is where the panel becomes a preview tool. For each attribute it draws a small distribution, and the bars are colour-coded to show exactly what would change if that value or range were toggled:

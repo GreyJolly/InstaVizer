@@ -302,7 +302,7 @@ var MdsConfig = (function () {
         for (var entityType in _entities) {
             var def = _entities[entityType];
             var props = (def.properties || []).filter(function (p) {
-                return p.dtype === 'enum' || p.dtype === 'int' || p.dtype === 'float';
+                return SchemaStore.isCategorical(p) || p.dtype === 'int' || p.dtype === 'float';
             });
             if (props.length === 0) continue;
 
@@ -358,8 +358,8 @@ var MdsConfig = (function () {
         label.innerHTML = '<span>' + prop.name + '</span><span class="mds-cfg-dtype-tag">' + prop.dtype + '</span>';
         attrWrap.appendChild(label);
 
-        if (prop.dtype === 'enum') {
-            var values = prop.values || [];
+        if (SchemaStore.isCategorical(prop)) {
+            var values = SchemaStore.getCategoryValues(prop);
             // Compute counts for this enum attribute
             var enumCounts = {};
             if (allFileIds.length > 0) {

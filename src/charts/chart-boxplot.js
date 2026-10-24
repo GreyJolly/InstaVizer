@@ -528,15 +528,19 @@ function renderBoxplotChart() {
 
 
 function _buildBoxplotGroups(pairs, xProp) {
-    if (xProp.dtype === 'enum') {
-        var enumValues = xProp.values || [];
+    if (SchemaStore.isCategorical(xProp)) {
+        var enumValues = SchemaStore.getCategoryValues(xProp);
         var byEnum = {};
         enumValues.forEach(function(v) { byEnum[v] = []; });
         pairs.forEach(function(p) {
-            if (byEnum[p.x] !== undefined) byEnum[p.x].push(p.y);
+            var key = SchemaStore.categoryKey(p.x);
+            if (byEnum[key] !== undefined) byEnum[key].push(p.y);
         });
         var groups = enumValues.map(function(v) { return { label: v, values: byEnum[v] }; });
-        groups.sort(function(a, b) { return b.values.length - a.values.length; });
+        // Bools keep a fixed true/false order, matching the attribute chart
+        if (xProp.dtype !== 'bool') {
+            groups.sort(function(a, b) { return b.values.length - a.values.length; });
+        }
         return groups;
     } else {
         var allXValues = pairs.map(function(p) { return typeof p.x === 'number' ? p.x : parseFloat(p.x); });

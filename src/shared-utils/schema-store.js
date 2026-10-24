@@ -84,8 +84,29 @@ var SchemaStore = (function() {
         if (!def) return [];
         var props = def.properties || [];
         return props.filter(function(p) {
-            return p.dtype === 'enum' || p.dtype === 'int' || p.dtype === 'float';
+            return isCategorical(p) || p.dtype === 'int' || p.dtype === 'float';
         });
+    }
+
+    // ---- Categorical attributes (enum + bool) ----
+    // Bool attributes reuse the enum code paths. Their values are keyed as the
+    // strings 'true'/'false' so they work as labels, object keys and Set
+    // members; instance data keeps the raw booleans.
+    var BOOL_VALUES = ['true', 'false'];
+
+    function isCategorical(prop) {
+        return !!prop && (prop.dtype === 'enum' || prop.dtype === 'bool');
+    }
+
+    function getCategoryValues(prop) {
+        if (!prop) return [];
+        if (prop.dtype === 'bool') return BOOL_VALUES.slice();
+        return (prop.values || []).slice();
+    }
+
+    // Raw instance value -> the key used in getCategoryValues()
+    function categoryKey(value) {
+        return typeof value === 'boolean' ? String(value) : value;
     }
 
     function getNumericAttributes(entityName) {
@@ -110,6 +131,9 @@ var SchemaStore = (function() {
         getRelationsFromEntity: getRelationsFromEntity,
         getAllRelationsForEntity: getAllRelationsForEntity,
         getPlottableAttributes: getPlottableAttributes,
-        getNumericAttributes: getNumericAttributes
+        getNumericAttributes: getNumericAttributes,
+        isCategorical: isCategorical,
+        getCategoryValues: getCategoryValues,
+        categoryKey: categoryKey
     };
 })();

@@ -13,8 +13,8 @@ var FilterQuery = (function() {
         var result = [];
         for (var i = 0; i < props.length; i++) {
             var p = props[i];
-            if (p.dtype === 'enum') {
-                result.push({ name: p.name, dtype: 'enum', values: (p.values || []).slice() });
+            if (SchemaStore.isCategorical(p)) {
+                result.push({ name: p.name, dtype: p.dtype, values: SchemaStore.getCategoryValues(p) });
             } else if (p.dtype === 'int' || p.dtype === 'float') {
                 var nums = DataStore.getAttributeNumericValues(entityType, p.name, fileIds);
                 if (nums.length === 0) continue;
@@ -108,7 +108,7 @@ var FilterQuery = (function() {
     // ---- Paired values ----
 
     // Paired (x, y) values per filtered node that has both attributes.
-    // Returns [{ x, y:<number>, fileId }]. xAttr may be enum/int/float;
+    // Returns [{ x, y:<number>, fileId }]. xAttr may be enum/bool/int/float;
     // yAttr must be numeric.
     function getFilteredPairedValues(entityType, xPropName, yPropName, fileIds) {
         var nodes = getFilteredNodes(fileIds, entityType);
@@ -223,7 +223,7 @@ var FilterQuery = (function() {
         }
         if (!attrMeta) return { bins: [], stacks: [] };
 
-        var isEnum = attrMeta.dtype === 'enum';
+        var isEnum = SchemaStore.isCategorical(attrMeta);
         var binLabels, binCount;
 
         if (isEnum) {
@@ -255,7 +255,7 @@ var FilterQuery = (function() {
 
             var binIdx = -1;
             if (isEnum) {
-                binIdx = binLabels.indexOf(val);
+                binIdx = binLabels.indexOf(SchemaStore.categoryKey(val));
             } else {
                 var numVal = typeof val === 'number' ? val : parseFloat(val);
                 if (!isFinite(numVal)) continue;
@@ -272,7 +272,7 @@ var FilterQuery = (function() {
             var passesThis = true;
             if (thisFilter) {
                 if (thisFilter.type === 'enum') {
-                    passesThis = thisFilter.selected.has(val);
+                    passesThis = thisFilter.selected.has(SchemaStore.categoryKey(val));
                 } else if (thisFilter.type === 'numeric') {
                     var nv = typeof val === 'number' ? val : parseFloat(val);
                     if (thisFilter.floor != null && nv < thisFilter.floor) passesThis = false;
@@ -290,7 +290,7 @@ var FilterQuery = (function() {
                 if (oVal === undefined || oVal === null || oVal === 'TODO') {
                     passesOther = false;
                 } else if (oFilter.type === 'enum') {
-                    passesOther = oFilter.selected.has(oVal);
+                    passesOther = oFilter.selected.has(SchemaStore.categoryKey(oVal));
                 } else if (oFilter.type === 'numeric') {
                     var onv = typeof oVal === 'number' ? oVal : parseFloat(oVal);
                     if (isNaN(onv)) passesOther = false;

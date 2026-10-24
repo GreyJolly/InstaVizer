@@ -90,7 +90,7 @@ var FilterState = (function() {
             if (filter.type === 'enum') {
                 if (filter.selected.size === 0) return false;
                 var hasVal = (val !== undefined && val !== null && val !== 'TODO');
-                if (!hasVal || !filter.selected.has(val)) return false;
+                if (!hasVal || !filter.selected.has(SchemaStore.categoryKey(val))) return false;
             } else if (filter.type === 'numeric') {
                 if (val === undefined || val === null || val === 'TODO') return false;
                 var numVal = typeof val === 'number' ? val : parseFloat(val);

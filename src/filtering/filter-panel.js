@@ -30,7 +30,7 @@ var FilterPanel = (function() {
         for (var i = 0; i < attrs.length; i++) {
             var attr = attrs[i];
             var numericBins = null;
-            if (attr.dtype !== 'enum') {
+            if (!SchemaStore.isCategorical(attr)) {
                 var allValues = DataStore.getAttributeNumericValues(_currentEntity, attr.name, _currentFileIds);
                 if (allValues.length > 0) {
                     numericBins = BinningHelpers.computeNumericBins(allValues, attr.dtype, _binSizes[attr.name] || null);
@@ -225,7 +225,7 @@ var FilterPanel = (function() {
             }
             if (!attr) return;
 
-            var isEnum = attr.dtype === 'enum';
+            var isEnum = SchemaStore.isCategorical(attr);
             var numericBins = null;
             if (!isEnum) {
                 var allValues = DataStore.getAttributeNumericValues(_currentEntity, attr.name, _currentFileIds);
@@ -268,7 +268,7 @@ var FilterPanel = (function() {
         if (_viewMode === 'chart') {
             section.appendChild(_buildChartFilter(attr));
         } else {
-            if (attr.dtype === 'enum') {
+            if (SchemaStore.isCategorical(attr)) {
                 section.appendChild(_buildEnumFilter(attr));
             } else {
                 section.appendChild(_buildNumericFilter(attr));
@@ -379,7 +379,7 @@ var FilterPanel = (function() {
         var wrap = document.createElement('div');
         wrap.className = 'filter-chart-wrap';
 
-        var isEnum = attr.dtype === 'enum';
+        var isEnum = SchemaStore.isCategorical(attr);
         var numericBins = null;
 
         if (!isEnum) {
@@ -441,7 +441,7 @@ var FilterPanel = (function() {
     function _renderMiniChart(container, attr, impact, numericBins) {
         var bins = impact.bins;
         var stacks = impact.stacks;
-        var isEnum = attr.dtype === 'enum';
+        var isEnum = SchemaStore.isCategorical(attr);
         var nBins = bins.length;
 
         var maxTotal = _globalMaxTotal || 0;
@@ -566,7 +566,7 @@ var FilterPanel = (function() {
     // Bin click toggling
     // ===========================
     function _toggleBin(attr, binIndex, binValue, numericBins) {
-        var isEnum = attr.dtype === 'enum';
+        var isEnum = SchemaStore.isCategorical(attr);
 
         if (isEnum) {
             var existingFilter = FilterState.getFilter(_currentEntity, attr.name);
@@ -715,7 +715,7 @@ var FilterPanel = (function() {
                 }
             });
         } else {
-            var enumSections = _panelEl.querySelectorAll('.filter-attr-section[data-dtype="enum"]');
+            var enumSections = _panelEl.querySelectorAll('.filter-attr-section[data-dtype="enum"], .filter-attr-section[data-dtype="bool"]');
             enumSections.forEach(function(section) {
                 var attrName = section.dataset.attrName;
                 var impacts = FilterQuery.getEnumValueCounts(_currentEntity, attrName, _currentFileIds);
@@ -743,7 +743,7 @@ var FilterPanel = (function() {
         for (var i = 0; i < attrs.length; i++) {
             var section = panel.querySelector('[data-attr-name="' + attrs[i].name + '"]');
             if (!section) continue;
-            if (attrs[i].dtype === 'enum') {
+            if (SchemaStore.isCategorical(attrs[i])) {
                 section.querySelectorAll('input[type="checkbox"]').forEach(function(cb) { cb.checked = true; });
             } else {
                 section.querySelectorAll('input[type="number"]').forEach(function(inp) { inp.value = ''; });

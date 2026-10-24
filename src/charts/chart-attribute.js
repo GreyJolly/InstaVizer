@@ -2,7 +2,7 @@
 // AttributeChart - Attribute value distribution
 // ===========================
 // Three render modes, chosen by options.mode:
-//   'enum'    : stacked bars per distinct enum value
+//   'enum'    : stacked bars per distinct enum (or bool) value
 //   'numeric' : stacked histogram over computed bins
 //   'compare' : diverging bars, one file's % distribution vs the rest
 //
@@ -536,7 +536,7 @@ function renderAttributeChart() {
     var prop = ModalState.attribute.prop;
     if (!prop) {
         chart.showNoData('No plottable attributes',
-            'This entity has no enum, int, or float properties');
+            'This entity has no enum, bool, int, or float properties');
         return;
     }
 
@@ -554,7 +554,7 @@ function renderAttributeChart() {
     var data;
     if (ModalState.attribute.compareFileId) {
         data = _buildAttrCompareData(item.name, prop, fileIds, fileObjects);
-    } else if (prop.dtype === 'enum') {
+    } else if (SchemaStore.isCategorical(prop)) {
         data = _buildEnumCumulativeData(item.name, prop, fileIds, fileObjects);
     } else {
         data = _buildNumericCumulativeData(item.name, prop, fileIds, fileObjects);
@@ -567,7 +567,7 @@ function renderAttributeChart() {
 
 function _buildEnumCumulativeData(entityName, prop, fileIds, fileObjects) {
     var propName = prop.name;
-    var enumValues = prop.values || [];
+    var enumValues = SchemaStore.getCategoryValues(prop);
 
     var fileCounts = {};
     var totalByValue = {};
@@ -583,7 +583,10 @@ function _buildEnumCumulativeData(entityName, prop, fileIds, fileObjects) {
         });
     });
 
-    var sortedValues = enumValues.slice().sort(function(a, b) { return totalByValue[b] - totalByValue[a]; });
+    // Bools keep a fixed true/false order so bars line up when switching attributes
+    var sortedValues = prop.dtype === 'bool'
+        ? enumValues
+        : enumValues.slice().sort(function(a, b) { return totalByValue[b] - totalByValue[a]; });
     var countStats = Chart.computeStats(sortedValues.map(function(v) { return totalByValue[v]; }));
 
     return {
@@ -644,6 +647,7 @@ function _buildNumericCumulativeData(entityName, prop, fileIds, fileObjects) {
 function _buildAttrCompareData(entityName, prop, fileIds, fileObjects) {
     var propName = prop.name;
     var dtype = prop.dtype;
+    var isCategorical = SchemaStore.isCategorical(prop);
     var compareId = ModalState.attribute.compareFileId;
 
     var compareFile = fileObjects.find(function(f) { return f.id == compareId; });
@@ -657,8 +661,8 @@ function _buildAttrCompareData(entityName, prop, fileIds, fileObjects) {
     var otherFileIds = fileIds.filter(function(fid) { return fid != compareId; });
 
     var categories;
-    if (dtype === 'enum') {
-        categories = (prop.values || []).slice();
+    if (isCategorical) {
+        categories = SchemaStore.getCategoryValues(prop);
     } else {
         var allValues = FilterQuery.getFilteredNumericValues(entityName, propName, fileIds);
         if (allValues.length === 0) {
@@ -670,7 +674,7 @@ function _buildAttrCompareData(entityName, prop, fileIds, fileObjects) {
 
     var compCounts, restCounts, compTotal = 0, restTotal = 0;
 
-    if (dtype === 'enum') {
+    if (isCategorical) {
         compCounts = {};
         restCounts = {};
         categories.forEach(function(v) { compCounts[v] = 0; restCounts[v] = 0; });
@@ -696,10 +700,10 @@ function _buildAttrCompareData(entityName, prop, fileIds, fileObjects) {
     }
 
     var chartData = [];
-    var catLabels = dtype === 'enum' ? categories : categories.map(function(c) { return c.label; });
+    var catLabels = isCategorical ? categories : categories.map(function(c) { return c.label; });
     catLabels.forEach(function(label, i) {
-        var compC = dtype === 'enum' ? compCounts[label] : compCounts[i];
-        var restC = dtype === 'enum' ? restCounts[label] : restCounts[i];
+        var compC = isCategorical ? compCounts[label] : compCounts[i];
+        var restC = isCategorical ? restCounts[label] : restCounts[i];
         var compPct = compTotal > 0 ? (compC / compTotal * 100) : 0;
         var restPct = restTotal > 0 ? (restC / restTotal * 100) : 0;
         chartData.push({
