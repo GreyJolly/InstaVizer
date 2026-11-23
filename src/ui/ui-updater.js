@@ -75,7 +75,7 @@ function renderFileList() {
     if (!inSelMode) {
         container.querySelectorAll('.file-item[draggable="true"]').forEach(function(el) {
             el.addEventListener('dragstart', function(e) {
-                var fid = parseFloat(el.et.fileId);
+                var fid = parseFloat(el.dataset.fileId);
                 FileGroups.onDragStart(fid);
                 e.dataTransfer.effectAllowed = 'move';
                 el.classList.add('dragging');
