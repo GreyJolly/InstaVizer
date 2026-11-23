@@ -76,13 +76,19 @@ function renderFileList() {
         container.querySelectorAll('.file-item[draggable="true"]').forEach(function(el) {
             el.addEventListener('dragstart', function(e) {
                 var fid = parseFloat(el.dataset.fileId);
-                FileGroups.onDragStart(fid);
+                // Dragging a multi-selected file carries the whole selection.
+                var ids = FileGroups.isMultiSelected(fid) ? FileGroups.getMultiSelectedIds() : [fid];
+                FileGroups.onDragStart(ids);
                 e.dataTransfer.effectAllowed = 'move';
-                el.classList.add('dragging');
+                container.querySelectorAll('.file-item[data-file-id]').forEach(function(item) {
+                    if (ids.indexOf(parseFloat(item.dataset.fileId)) !== -1) item.classList.add('dragging');
+                });
             });
             el.addEventListener('dragend', function() {
                 FileGroups.onDragEnd();
-                el.classList.remove('dragging');
+                container.querySelectorAll('.file-item.dragging').forEach(function(item) {
+                    item.classList.remove('dragging');
+                });
             });
         });
         container.querySelectorAll('.file-group-header').forEach(function(el) {
@@ -176,14 +182,17 @@ function _renderFileItem(file, inModal, inSelMode, pendingIds, isGrouped) {
     if (!isEnabled && !inModal && !inSelMode) itemClass += ' disabled';
     if (isPending) itemClass += ' selected'; // highlight pending files
     if (isGrouped) itemClass += ' file-item--grouped';
+    if (!inSelMode && FileGroups.isMultiSelected(file.id)) itemClass += ' file-item--multi';
 
+    // Ctrl/Cmd/Shift+click multi-selects for grouping; a plain click toggles the file.
+    var multiClick = 'if (FileGroups.onFileClick(event, ' + file.id + ')) return; ';
     var clickHandler;
     if (inSelMode) {
         clickHandler = 'FileGroups.togglePendingFile(' + file.id + '); FileGroups._updateSelectionCount()';
     } else if (inModal) {
-        clickHandler = 'toggleModalFile(\'' + file.id + '\')';
+        clickHandler = multiClick + 'toggleModalFile(\'' + file.id + '\')';
     } else {
-        clickHandler = 'toggleFile(\'' + file.id + '\')';
+        clickHandler = multiClick + 'toggleFile(\'' + file.id + '\')';
     }
 
     var draggable = !inSelMode ? ' draggable="true"' : '';

@@ -292,7 +292,8 @@ Every file has a colour that identifies it consistently in every chart.
 Groups allow to organise files under a shared colour and label:
 
 - **Create Group** creates a group, opens the name editing box and assigns it a distinct colour
-- Files can be dragged them from the sidebar onto the group, or added by entering the group's selection mode and lasso/clicking files straight off a chart (on supported charts)
+- Files can be dragged from the sidebar onto the group, or added by entering the group's selection mode and lasso/clicking files straight off a chart (on supported charts)
+- To move several files at once, **Ctrl+click** (**Cmd+click** on macOS) files in the sidebar to add or remove them from a multi-selection, or **Shift+click** to select a range. Selected files are outlined in cyan; dragging any of them onto a group header moves the whole selection. A plain click or **Esc** clears the selection.
 - Every file in a group takes on the group's colour across all charts and mini charts, so a whole category of files reads as one colour wherever it appears. Removing a file from a group restores its previous colour.
 - Groups can be renamed, recoloured, collapsed, or removed at any time; changes recolour the visualisations in place.
 

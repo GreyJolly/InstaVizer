@@ -2,7 +2,8 @@
 // File Groups Manager
 // ===========================
 // Manages named groups of files. Files inherit the group color.
-// Supports drag-and-drop from sidebar and lasso/click selection mode.
+// Supports drag-and-drop from sidebar (one file, or a Ctrl/Cmd/Shift-click
+// multi-selection) and lasso/click selection mode.
 
 var FileGroups = (function() {
 
@@ -14,8 +15,13 @@ var FileGroups = (function() {
     var _targetGroupId = null;
     var _pendingFileIds = new Set();
 
-    // Drag state
-    var _dragFileId = null;
+    // Drag state (one or more files being dragged onto a group)
+    var _dragFileIds = [];
+
+    // Sidebar multi-selection (Ctrl/Cmd+click, Shift+click) used to drag
+    // several files into a group at once. Independent of the enabled state.
+    var _multiSelected = new Set();
+    var _selectAnchor = null;
 
     // ---- Group CRUD ----
 
@@ -116,6 +122,8 @@ var FileGroups = (function() {
     // ---- Selection Mode (for lasso / click-to-select) ----
 
     function startSelectionMode(groupId) {
+        _multiSelected.clear();
+        _selectAnchor = null;
         _selectionMode = true;
         _targetGroupId = groupId;
         _pendingFileIds = new Set();
@@ -258,14 +266,91 @@ var FileGroups = (function() {
         _updateAllSelectionHighlights();
     }
 
+    // ---- Sidebar multi-selection ----
+
+    // Called from a file item's click handler. Returns true when the click was
+    // a multi-select gesture (Ctrl/Cmd or Shift held) and has been handled, so
+    // the caller should skip its normal enable/disable toggle.
+    function onFileClick(event, fileId) {
+        if (_selectionMode) return false;
+
+        var additive = event.ctrlKey || event.metaKey;
+        if (!additive && !event.shiftKey) {
+            // Plain click: drop any multi-selection and let the normal toggle run.
+            if (_multiSelected.size > 0) {
+                _multiSelected.clear();
+                _selectAnchor = null;
+            }
+            return false;
+        }
+
+        if (event.shiftKey) {
+            // Shift+click would otherwise extend the page's text selection.
+            if (window.getSelection) window.getSelection().removeAllRanges();
+            var visible = _visibleFileIds();
+            var from = visible.indexOf(_selectAnchor);
+            var to = visible.indexOf(fileId);
+            if (from !== -1 && to !== -1) {
+                if (!additive) _multiSelected.clear();
+                var lo = Math.min(from, to), hi = Math.max(from, to);
+                for (var i = lo; i <= hi; i++) _multiSelected.add(visible[i]);
+                renderFileList();
+                return true;
+            }
+            // No usable anchor: fall through and treat it as a single toggle.
+        }
+
+        if (_multiSelected.has(fileId)) _multiSelected.delete(fileId);
+        else _multiSelected.add(fileId);
+        _selectAnchor = fileId;
+        renderFileList();
+        return true;
+    }
+
+    // File ids in the order they currently appear in the sidebar (files inside
+    // collapsed groups are not rendered, so they're skipped by range selects).
+    function _visibleFileIds() {
+        var items = document.querySelectorAll('#file-sidebar-list .file-item[data-file-id]');
+        return Array.prototype.map.call(items, function(el) {
+            return parseFloat(el.dataset.fileId);
+        });
+    }
+
+    function isMultiSelected(fileId) { return _multiSelected.has(fileId); }
+
+    // Selected ids in sidebar-registry order.
+    function getMultiSelectedIds() {
+        return FileRegistry.all()
+            .filter(function(f) { return _multiSelected.has(f.id); })
+            .map(function(f) { return f.id; });
+    }
+
+    function clearMultiSelection() {
+        if (_multiSelected.size === 0) return;
+        _multiSelected.clear();
+        _selectAnchor = null;
+        renderFileList();
+    }
+
+    // Escape clears the multi-selection. Captured on window so it runs before
+    // the modal's Escape-to-close handler and doesn't also close the modal.
+    window.addEventListener('keydown', function(e) {
+        if (e.key !== 'Escape' || _multiSelected.size === 0) return;
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+        e.stopPropagation();
+        clearMultiSelection();
+    }, true);
+
     // ---- Drag & Drop from sidebar ----
 
-    function onDragStart(fileId) {
-        _dragFileId = fileId;
+    // Accepts a single file id or an array of ids.
+    function onDragStart(fileIds) {
+        _dragFileIds = Array.isArray(fileIds) ? fileIds.slice() : [fileIds];
     }
 
     function onDragEnd() {
-        _dragFileId = null;
+        _dragFileIds = [];
         document.querySelectorAll('.file-group-header.drag-over').forEach(function(el) {
             el.classList.remove('drag-over');
         });
@@ -278,9 +363,11 @@ var FileGroups = (function() {
 
     function onGroupDrop(event, groupId) {
         event.preventDefault();
-        if (_dragFileId != null) {
-            addFileToGroup(_dragFileId, groupId);
-            _dragFileId = null;
+        if (_dragFileIds.length > 0) {
+            _dragFileIds.forEach(function(fid) { addFileToGroup(fid, groupId); });
+            _dragFileIds = [];
+            _multiSelected.clear();
+            _selectAnchor = null;
             updateGroupColorsInPlace();
         }
     }
@@ -338,12 +425,16 @@ var FileGroups = (function() {
             var idx = g.fileIds.indexOf(fileId);
             if (idx !== -1) g.fileIds.splice(idx, 1);
         });
+        _multiSelected.delete(fileId);
+        if (_selectAnchor === fileId) _selectAnchor = null;
     }
 
     // When all files cleared
     function onClearAll() {
         _groups = [];
         _nextId = 1;
+        _multiSelected.clear();
+        _selectAnchor = null;
         cancelSelectionMode();
     }
 
@@ -364,6 +455,10 @@ var FileGroups = (function() {
         togglePendingFile: togglePendingFile,
         isSelectionMode: isSelectionMode,
         getPendingFileIds: getPendingFileIds,
+        onFileClick: onFileClick,
+        isMultiSelected: isMultiSelected,
+        getMultiSelectedIds: getMultiSelectedIds,
+        clearMultiSelection: clearMultiSelection,
         onDragStart: onDragStart,
         onDragEnd: onDragEnd,
         onGroupDragOver: onGroupDragOver,
